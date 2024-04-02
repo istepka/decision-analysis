@@ -1,6 +1,6 @@
-name1, name2, relation
-The Godfather, Forrest Gump, >
-Catwoman, The Prestige, <
-Inception, Pulp Fiction, >
-Batman & Robin, The Dark Knight, <
-Whiplash, The Dark Knight, >
+name1,name2,relation
+The Godfather, Forrest Gump, better
+Catwoman, The Prestige, worse
+Inception, Pulp Fiction, better
+Batman & Robin, The Dark Knight, worse
+Whiplash, The Dark Knight, better

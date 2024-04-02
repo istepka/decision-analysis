@@ -107,6 +107,10 @@ class ComprehensivePreferenceIndex:
     def __repr__(self):
         return self.__str__()
     
+    def get_as_dataframe(self):
+        '''Get the matrix as a pandas DataFrame.'''
+        return pd.DataFrame(self.matrix, index=self.mp_matrices[0].names, columns=self.mp_matrices[0].names)
+    
     def save(self, filename: str):
         '''Save the matrix to a file.'''
         df = pd.DataFrame(self.matrix, index=self.mp_matrices[0].names, columns=self.mp_matrices[0].names)
@@ -208,8 +212,8 @@ class PrometheeI(PrometheeBase):
                         else:
                             outranking_matrix[i][j] = 0
                     
-                    if outranking_matrix[i][j] == 0:
-                        print(f'{names[i]} vs {names[j]}: {outranking_matrix[i][j]}')
+                    # if outranking_matrix[i][j] == 0:
+                    #     print(f'{names[i]} vs {names[j]}: {outranking_matrix[i][j]}')
                 
         # Create ranking graph structure
         adjacency_list = {name: [] for name in names}

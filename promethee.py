@@ -1,5 +1,5 @@
 import os 
-from preference_functions import CriterionType, PreferenceFuction, VShapeWithIndifference, MarginalPreferenceMatrix, ComprehensivePreferenceIndex, PrometheeI   
+from preference_functions import CriterionType, VShapeWithIndifference, MarginalPreferenceMatrix, ComprehensivePreferenceIndex, PrometheeI, PrometheeII  
 from parse import data, criteria, decision_classes, pairwise_comparisons
 
 PROMETHEE_SAVE_DIR = 'results/promethee' # Directory to save the marginal preference matrices, just for debugging and analysis
@@ -41,7 +41,7 @@ promethee1.plot_ranking(type='negative', savedir=f'{PROMETHEE_SAVE_DIR}/ranking_
 promethee1.plot_ranking(type='overall', savedir=f'{PROMETHEE_SAVE_DIR}/ranking_prom1_overall.png', show=True)
 
 # Do the same for Promethee II
-promethee2 = PrometheeI(cpi)
+promethee2 = PrometheeII(cpi)
 print(promethee2)
 promethee2.plot_ranking(type='positive', savedir=f'{PROMETHEE_SAVE_DIR}/ranking_prom2_positive.png', show=False)
 promethee2.plot_ranking(type='negative', savedir=f'{PROMETHEE_SAVE_DIR}/ranking_prom2_negative.png', show=False)
