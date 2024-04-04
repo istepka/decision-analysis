@@ -46,6 +46,14 @@ class VShapeWithIndifference(PreferenceFuction):
         else:
             return (dist - self.indifference_threshold) / (self.preference_threshold - self.indifference_threshold)
         
+class UShape(PreferenceFuction):
+    def _internal_compare(self, dist: float) -> float:
+        '''Internal method to compare two values based on the U-shape preference function.'''
+        if dist > self.indifference_threshold:
+            return 1
+        else: 
+            return 0
+        
 class MarginalPreferenceMatrix:
     '''Class to store the marginal preference matrix.'''
     def __init__(self, alternatives: list[float], pfunction: PreferenceFuction, names: list[str] = None):
