@@ -22,15 +22,6 @@ def concordance_function(difference,indifference,preference,gain):
 
 
 def calculate_marginal_concordance(alternatives, boundary_profiles, indifference_thresholds, preference_thresholds, gain,concordance_function=concordance_function):
-    # Calculate marginal concordance for each alternative and boundary profile
-    # Arguments:
-    #   alternatives: pandas dataframe with alternatives
-    #   boundary_profiles: pandas dataframe with boundary profiles
-    #   indifference_thresholds: list of indifference thresholds for each boundary profile
-    #   preference_thresholds: list of preference thresholds for each boundary profile
-    #   gain: list of boolean values indicating whether the criterion is gain or cost
-    # Returns:
-    #   marginal_concordance: numpy array with marginal concordance in the shape of (number of criteria, number of alternatives, number of boundary profiles)
 
     marginal_concordance_alt_to_profile = np.zeros((len(boundary_profiles),len(alternatives),len(alternatives.columns),))
     marginal_concordance_profile_to_alt = np.zeros((len(boundary_profiles),len(alternatives),len(alternatives.columns),))
@@ -82,17 +73,12 @@ def calculate_marginal_discordance(alternatives,boundary_profiles,preference_thr
 
 def calculate_comprehensive_concordance(concordance_matrix_alt_to_profile, concordance_matrix_profile_to_alt,weights):
 
-    # weighted average of concordances for each alternative
-
     comprehensive_concordance_alt_to_profile = np.average(concordance_matrix_alt_to_profile, axis=2, weights=weights)
     comprehensive_concordance_profile_to_alt = np.average(concordance_matrix_profile_to_alt, axis=2, weights=weights)
 
     return comprehensive_concordance_alt_to_profile.T, comprehensive_concordance_profile_to_alt.T
 
 def calculate_outranking_credibility(comprehensive_concordance,marginal_discordance):
-    # Returns array of outranking credibility for each alternative
-    # outranking[alternative][boundary profile][0] = outranking credibility of alternative to boundary profile
-    # outranking[alternative][boundary profile][1] = outranking credibility of boundary profile to alternative
     outrankings = np.zeros((len(comprehensive_concordance[0]),len(comprehensive_concordance[0][0]),2))
     for i in range(len(comprehensive_concordance[0])): # numver of alternatives
         for j in range(len(comprehensive_concordance[0][0])): # number of boundary profiles
