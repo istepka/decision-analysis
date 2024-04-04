@@ -1,8 +1,8 @@
-Criterion,Description,Value Type,Min Value,Max Value
-Acting,Quality of performances by the cast,Discrete,1,10
-Plot,Depth and engagement of the storyline,Discrete,1,5
-Pictures,Cinematography and visual aesthetics,Discrete,1,10
-Music,Quality and impact of the soundtrack,Discrete,1,5
-Sentiment,Overall sentiment conveyed by the movie,Discrete,Negative/Indifferent/Positive
-Critics Score,Average score assigned by critics,Continuous,1,10
-Oscars Won,Total number of Oscars won by the movie,Discrete,0,23
+Criterion,Description,Value Type,Min Value,Max Value,Direction
+Acting,Quality of performances by the cast,Discrete,1,10,gain
+Plot,Depth and engagement of the storyline,Discrete,1,5,gain
+Pictures,Cinematography and visual aesthetics,Discrete,1,10,gain
+Music,Quality and impact of the soundtrack,Discrete,1,5,gain
+Sentiment,Overall sentiment conveyed by the movie,Discrete,0,1,gain
+Critics Score,Average score assigned by critics,Continuous,1,10,gain
+Oscars Won,Total number of Oscars won by the movie,Discrete,0,23,gain
