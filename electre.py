@@ -95,25 +95,24 @@ def calculate_outranking_credibility(comprehensive_concordance,marginal_discorda
 
 def preference_aggregation(aPb,bPa):
     if aPb and not bPa:
-        return 1 # a is preferred to b
+        return 1
     if not aPb and bPa:
-        return -1 # b is preferred to a
+        return -1
     if aPb and bPa: 
-        return 0 # indifferent
+        return 0
     if not aPb and not bPa:
-        return None # incomparable
+        return None
 
 def transform_outranking_to_preference(outrankings,credibility_threshold=0.65):
 
     outranking_preference = np.zeros((len(outrankings),len(outrankings[0])))
-    for i in range(len(outrankings)): # alternatives
-        for j in range(len(outrankings[0])): # boundary profiles
+    for i in range(len(outrankings)):
+        for j in range(len(outrankings[0])):
             outranking_preference[i][j] = preference_aggregation(outrankings[i][j][0] >= credibility_threshold, outrankings[i][j][1] >= credibility_threshold)
     return outranking_preference
 
 def class_assignment(preference_matrix,num_classes, pessimistic=True):
     if pessimistic:
-        # fill array of size len(preference_matrix) with max value of 2
         classes = np.full(len(preference_matrix),num_classes)
 
     else:
@@ -137,22 +136,16 @@ def class_assignment(preference_matrix,num_classes, pessimistic=True):
     return classes 
  
 def electre_tri_b(alternatives,boundary_profiles,criteria_is_gain,indifference_thresholds,preference_thresholds,veto_thresholds,weights,pessimistic=True):
-    # Returns array of classes for each alternative
 
-    # Calculate concordance and discordance matrices
     concordance_matrix_alt_to_profile, concordance_matrix_profile_to_alt = calculate_marginal_concordance(alternatives,boundary_profiles,indifference_thresholds,preference_thresholds,criteria_is_gain)
     discordance_matrix_alt_to_profile, discordance_matrix_profile_to_alt = calculate_marginal_discordance(alternatives,boundary_profiles,preference_thresholds,veto_thresholds,criteria_is_gain)
 
-    # Calculate comprehensive concordance
     comprehensive_concordance = calculate_comprehensive_concordance(concordance_matrix_alt_to_profile,concordance_matrix_profile_to_alt,weights)
 
-    # Calculate outranking credibility
     outrankings = calculate_outranking_credibility(comprehensive_concordance,[discordance_matrix_alt_to_profile,discordance_matrix_profile_to_alt])
 
-    # Transform outranking credibility to preference
     outranking_preference = transform_outranking_to_preference(outrankings)
 
-    # Assign classes
     classes = class_assignment(outranking_preference,len(boundary_profiles)+1,pessimistic)
 
     return classes
@@ -164,7 +157,6 @@ def plot_electre_classes(data, class_column):
         print(int(level), end=' ')
     print()
 
-    # plot
     pos = nx.multipartite_layout(G, subset_key="level", align='horizontal')
     nx.draw(G, pos, with_labels=True, node_size=1000, node_color='skyblue', font_size=7, font_weight='bold')    
     plt.show()

@@ -130,9 +130,9 @@ def test_class_assignment():
 
 def test_electre_tri_b():
     
-    test_alternatives = pd.DataFrame([[70,98,78,76],
-    [44,51,23,46],
-    [94,100,43,36],
+    test_alternatives = pd.DataFrame([[90,86,46,30],
+    [40,90,14,48],
+    [94,100,40,36],
     [78,76,30,50],
     [60,60,30,30],
     [64,72,12,46],
