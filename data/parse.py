@@ -4,6 +4,7 @@ criteria = pd.read_csv('data/criteria.csv')
 data = pd.read_csv('data/data.csv')
 decision_classes = pd.read_csv('data/decision_classes.csv')
 pairwise_comparisons = pd.read_csv('data/pairwise_comp.csv')
+pairwise_comparisons_UTA = pd.read_csv('data/pairwise_comp_UTA.csv')
 
 if __name__ == '__main__':
     print(criteria)
