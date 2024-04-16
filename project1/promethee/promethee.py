@@ -1,6 +1,6 @@
 import os 
-from preference_functions import CriterionType, VShapeWithIndifference, MarginalPreferenceMatrix, ComprehensivePreferenceIndex, PrometheeI, PrometheeII  
-from parse import data, criteria, decision_classes, pairwise_comparisons
+from project1.promethee.preference_functions import CriterionType, VShapeWithIndifference, MarginalPreferenceMatrix, ComprehensivePreferenceIndex, PrometheeI, PrometheeII  
+from data.parse import data, criteria, decision_classes, pairwise_comparisons
 
 PROMETHEE_SAVE_DIR = 'results/promethee' # Directory to save the marginal preference matrices, just for debugging and analysis
 os.makedirs(PROMETHEE_SAVE_DIR, exist_ok=True)
