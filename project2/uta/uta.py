@@ -61,19 +61,22 @@ def add_alternatives_variables(data: pd.DataFrame, criteria_variables: dict, pro
 def add_preferential_information(problem: LpProblem, 
         pairwise_comparisons: pd.DataFrame, 
         alterntives_utilities: dict, 
-        skip_indices=[],
+        skip_vars=[],
         add_slack_vars=False
     ) -> tuple[dict, dict]:
     
     estimation_errors_vars = {}
     slack_vars = {}
     
-    epsilon = 1e-2
+    epsilon = 1e-4
     
     # Add over and under estimation errors for each pairwaise comparison
 
     for idx, (name1, name2, relation) in enumerate(pairwise_comparisons.to_numpy()):
-        if idx in skip_indices:
+        # print(f'Slack_{"_".join(name1.split())}_{"_".join(name2.split())}_{relation}')
+        if f'Slack_{"_".join(name1.split())}_{"_".join(name2.split())}_{relation}' in skip_vars:
+            print(f'Skipping {name1}-{name2}-{relation}')
+            # exit()
             continue
         
         if not add_slack_vars:
@@ -83,7 +86,7 @@ def add_preferential_information(problem: LpProblem,
             sru = LpVariable(f"OverEstimationError_{name2}(in comp {name1}-{name2}[{idx}])", lowBound=0)
             estimation_errors_vars[(name1, name2, idx)] = (sll, slu, srl, sru)
         else:
-            slackvar = LpVariable(f"Slack_{name1}-{name2}[{relation}]", lowBound=0, upBound=1, cat='Binary')
+            slackvar = LpVariable(f"Slack_{name1}-{name2}-{relation}", lowBound=0, upBound=1, cat='Binary')
             slack_vars[(name1, name2, relation)] = slackvar
         
         if add_slack_vars:
@@ -166,8 +169,9 @@ def UTA():
                         local_solution_history['true'].append(var.name)
                     else:
                         local_solution_history['false'].append(var.name)
-                        
-            solution_history.append(local_solution_history)
+            
+            if local_solution_history['true']:
+                solution_history.append(local_solution_history)
             minval.append(len(local_solution_history['true']))
            
             if np.isclose(value(problem.objective), 0) or minval[-1] == 0:
@@ -184,10 +188,16 @@ def UTA():
 
     # Finally just do ordinal regression
     problem, alt_utils_dict = get_problem_base()
+    
+    # Remove inconsistent pairwise
+    least_inc_to_remove = sorted(solution_history, key=lambda x: len(x['true']))[0]
+    
     # Add preferential information
-    errors_dict, _ = add_preferential_information(problem, pairwise_comparisons_UTA, alt_utils_dict, add_slack_vars=False)
+    errors_dict, _ = add_preferential_information(problem, pairwise_comparisons_UTA, alt_utils_dict, add_slack_vars=False, skip_vars=least_inc_to_remove['true'])
     flatten = [e for e in errors_dict.values()]
     problem += lpSum(flatten)
+    
+    
     
     # Solve the problem
     problem.solve()
@@ -210,8 +220,9 @@ def UTA():
     return {
         'final_variables': final_variables,
         'final_objective_value': final_objective_value,
-        'final_inconsistency_history': solution_history
-    
+        'final_inconsistency_removed': least_inc_to_remove,
+        'final_pulp_problem': problem,
+        'inconsistent_solution_history': solution_history
     }
 
 

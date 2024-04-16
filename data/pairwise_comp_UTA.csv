@@ -2,8 +2,26 @@ name1,name2,relation
 The Godfather,Forrest Gump,better
 Catwoman,The Prestige,worse
 Inception,Pulp Fiction,better
-Batman & Robin,The Dark Knight,better
+Batman & Robin,The Dark Knight,worse
 Whiplash,The Dark Knight,worse
+Birdemic: Shock and Terror,The Dark Knight,worse
+Birdemic: Shock and Terror,Inception,worse
+Jack and Jill,The Dark Knight,worse
+Jack and Jill,The Godfather,worse
 Inception,Catwoman,better
 Catwoman,The Dark Knight,better
 The Dark Knight,The Prestige,better
+The Room,Whiplash,worse
+Forrest Gump,The Godfather,worse
+Dune 2,The Godfather,better
+Fifty Shades of Grey,Forrest Gump,worse
+Gladiator,Forrest Gump,better
+Shutter Island,The Godfather,better
+Se7en,The Godfather,better
+The Departed,Inception,worse
+Inception,Gladiator,better
+Catwoman,Jack and Jill,worse
+Battlefield Earth,Fifty Shades of Grey,worse
+Whiplash,Pulp Fiction,better
+The Room,Battlefield Earth,better
+
