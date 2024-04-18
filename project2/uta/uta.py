@@ -190,7 +190,7 @@ def UTA():
     problem, alt_utils_dict = get_problem_base()
     
     # Remove inconsistent pairwise
-    least_inc_to_remove = sorted(solution_history, key=lambda x: len(x['true']))[0]
+    least_inc_to_remove = sorted(solution_history, key=lambda x: len(x['true']), reverse=False)[0]
     
     # Add preferential information
     errors_dict, _ = add_preferential_information(problem, pairwise_comparisons_UTA, alt_utils_dict, add_slack_vars=False, skip_vars=least_inc_to_remove['true'])

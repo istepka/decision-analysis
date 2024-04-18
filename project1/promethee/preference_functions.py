@@ -104,8 +104,8 @@ class ComprehensivePreferenceIndex:
             self.matrix += mp_matrix.matrix * self.weights[i] / np.sum(self.weights)
             
         # Compute positive and negative flows
-        self.positive_flow = np.sum(self.matrix, axis=0)
-        self.negative_flow = np.sum(self.matrix, axis=1)
+        self.positive_flow = np.sum(self.matrix, axis=1)
+        self.negative_flow = np.sum(self.matrix, axis=0)
         
     def __str__(self):
         '''Nice representation of the matrix with names.'''
