@@ -1,0 +1,13 @@
+parent,child
+goal,film_technicalities
+goal,movie_perception
+film_technicalities,screen_action
+film_technicalities,artistic_value
+movie_perception,Sentiment
+movie_perception,Critics score
+movie_perception,Oscars won
+screen_action,Acting
+screen_action,Plot
+artistic_value,Pictures
+artistic_value,Music
+
