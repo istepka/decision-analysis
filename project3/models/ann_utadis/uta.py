@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from monotonic_layer import MonotonicLayer
+from .monotonic_layer import MonotonicLayer
 
 
 class Uta(nn.Sequential):

@@ -1,8 +1,8 @@
 import torch.nn as nn
 
-from criterion_layer_combine import CriterionLayerCombine
-from criterion_layer_spread_uniform_center import CriterionLayerSpread
-from leaky_hard_sigmoid import LeakyHardSigmoid
+from .criterion_layer_combine import CriterionLayerCombine
+from .criterion_layer_spread import CriterionLayerSpread
+from .leaky_hard_sigmoid import LeakyHardSigmoid
 
 
 class MonotonicLayer(nn.Sequential):

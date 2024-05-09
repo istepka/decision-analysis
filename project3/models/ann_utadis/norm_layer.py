@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from threshold_layer import ThresholdLayer
+from .threshold_layer import ThresholdLayer
 
 
 class NormLayer(nn.Module):

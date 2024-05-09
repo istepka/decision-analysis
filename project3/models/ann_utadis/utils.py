@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.optim as optim
 import torch.nn.functional as F
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, f1_score
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
@@ -146,6 +146,18 @@ def AUC(output: torch.FloatTensor, target: torch.LongTensor) -> torch.FloatTenso
     """
     return roc_auc_score(target.detach().numpy(), output.detach().numpy())
 
+def F1(output: torch.FloatTensor, target: torch.LongTensor) -> torch.FloatTensor:
+    """Calculate the F1 score of the model output compared to the target tensor.
+
+    Args:
+        output (torch.FloatTensor): Output tensor from the model.
+        target (torch.LongTensor): Target tensor.
+
+    Returns:
+        torch.FloatTensor: The F1 score of the model output compared to the target tensor.
+    """
+    return f1_score(target.detach().numpy(), (output > 0) * 1)
+
 
 class ScoreTracker:
     def __init__(self):
@@ -153,8 +165,9 @@ class ScoreTracker:
         self.losses = []
         self.auc_scores = []
         self.acc_scores = []
+        self.f1_scores = []
 
-    def append(self, loss: float, auc: float, acc: float) -> None:
+    def append(self, loss: float, auc: float, acc: float, f1: float) -> None:
         """
         Append the given loss, auc, and acc scores to the respective lists.
 
@@ -166,6 +179,7 @@ class ScoreTracker:
         self.losses.append(loss)
         self.auc_scores.append(auc)
         self.acc_scores.append(acc)
+        self.f1_scores.append(f1)
 
     def add(self, outputs: torch.FloatTensor, labels: torch.LongTensor) -> None:
         """Calculate and append the loss, auc, and acc scores for the given model outputs
@@ -178,6 +192,7 @@ class ScoreTracker:
         self.losses.append(Regret(outputs, labels).item())
         self.auc_scores.append(AUC(outputs, labels).item())
         self.acc_scores.append(Accuracy(outputs, labels).item())
+        self.f1_scores.append(F1(outputs, labels).item())
 
 
 def Train(
@@ -213,6 +228,7 @@ def Train(
     )
     best_acc = 0.0
     best_auc = 0.0
+    best_f1 = 0.0
     stats_train = ScoreTracker()
     stats_test = ScoreTracker()
     # Decrease the slope of the leaky hard sigmoid activation function in each epoch
@@ -230,7 +246,8 @@ def Train(
             scheduler.step()
             acc = Accuracy(outputs, labels)
             auc = AUC(outputs, labels)
-            stats_train.append(loss.item(), auc.item(), acc.item())
+            f1 = F1(outputs, labels)
+            stats_train.append(loss.item(), auc.item(), acc.item(), f1.item())
         with torch.no_grad():
             for _, data in enumerate(test_dataloader, 0):
                 inputs, labels = data
@@ -241,6 +258,7 @@ def Train(
         if acc > best_acc:
             best_acc = acc
             best_auc = auc
+            best_f1 = f1
 
             torch.save(
                 {
@@ -254,6 +272,7 @@ def Train(
     return (
         best_acc,
         best_auc,
+        best_f1,
         stats_train,
         stats_test,
     )
