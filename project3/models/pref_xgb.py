@@ -72,9 +72,7 @@ def load_data(
     """
     data = pd.read_csv(path, header=None)
     data[criteria_nr] = data[criteria_nr].apply(lambda x: target_map[x])
-
     data = data.drop_duplicates()
-
     data_input = data.iloc[:, :criteria_nr]
     data_target = data[criteria_nr]
 
