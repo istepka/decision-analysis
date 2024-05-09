@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+import numpy as np
 from .threshold_layer import ThresholdLayer
 
 
@@ -51,3 +51,21 @@ class NormLayer(nn.Module):
 
         self.out = (self.out - zero) / (one - zero)
         return self.thresholdLayer(self.out)
+    
+    def predict_proba(self, X):
+        if not isinstance(X, torch.Tensor):
+            X = torch.tensor(X, dtype=torch.float32)
+        with torch.no_grad():
+            X = X.reshape(-1, 1, self.num_criteria)
+            out = self.forward(X) + 0.5
+        out = list(map(lambda x: [1-x, x], out.tolist()))
+        out = np.array(out)
+        return out
+    
+    def predict(self, X):
+        if not isinstance(X, torch.Tensor):
+            X = torch.tensor(X, dtype=torch.float32)
+        with torch.no_grad():
+            X = X.reshape(-1, 1, self.num_criteria)
+            out = self.forward(X) + 0.5
+        return out.flatten().item()

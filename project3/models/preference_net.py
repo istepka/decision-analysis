@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import numpy as np
 from tqdm import tqdm
 import os
 from sklearn.metrics import (
@@ -13,26 +14,52 @@ from sklearn.metrics import (
 
 
 class PreferenceNet(nn.Module):
-    def __init__(self, input_size, hidden_size):
+    def __init__(self, input_size, hidden_size, num_criteria):
         super(PreferenceNet, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, 1)
+        self.fc2 = nn.Linear(hidden_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.fc3 = nn.Linear(hidden_size, 1)
         self.sigmoid = nn.Sigmoid()
+
+        self.num_criteria = num_criteria
 
     def forward(self, x):
         out = self.fc1(x)
         out = self.relu(out)
         out = self.fc2(out)
+        out = self.relu(out)
+        out = self.fc3(out)
         out = self.sigmoid(out)
         return out
+    
+    def predict_proba(self, X):
+        if not isinstance(X, torch.Tensor):
+            X = torch.tensor(X, dtype=torch.float32)
+        with torch.no_grad():
+            X = X.reshape(-1, 1, self.num_criteria)
+            out = self.forward(X) 
+        out = out.flatten()
+        out = list(map(lambda x: [1-x, x], out.tolist()))
+        out = np.array(out)
+        return out
+    
+    def predict(self, X):
+        if not isinstance(X, torch.Tensor):
+            X = torch.tensor(X, dtype=torch.float32)
+        with torch.no_grad():
+            X = X.reshape(-1, 1, self.num_criteria)
+            out = self.forward(X)
+        return out.flatten().item()
+
 
 
 def train_model(
-    train_loader, test_loader, input_size, hidden_size, num_epochs=50, learning_rate=0.001, path="project3/weights/preference_net.pth"
+    train_loader, test_loader, input_size, hidden_size, num_epochs=50, learning_rate=0.001, path="project3/weights/preference_net.pth", num_criteria=1
 ):
     
-    model = PreferenceNet(input_size, hidden_size)
+    model = PreferenceNet(input_size, hidden_size, num_criteria=num_criteria)
     criterion = nn.BCELoss()
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, betas=(0.9, 0.99), weight_decay=0.01)
     best_accuracy = 0.0  # Track the best accuracy on the test set
