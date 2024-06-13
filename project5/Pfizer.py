@@ -119,6 +119,7 @@ if __name__ == '__main__':
 
     print(f"Current F1 value: {(np.array(A) * np.array(D)).sum()}")
     print(f"F1 lower bound: {np.array(D).min(axis=1).sum()}")
+    print(f"Labor change upper bound: {labor_change_upper_bound}")
 
     results = [solve_for_epsilon(i) for i in tqdm(np.linspace(0.1, labor_change_upper_bound, 200))]
     solutions_objective_values = [s for _, _, s in results]
@@ -132,7 +133,7 @@ if __name__ == '__main__':
     pareto_frontier = sorted({tuple(point) for point in solutions_coordinates_map.T if not any(
         (solutions_coordinates_map[0] <= point[0]) & (solutions_coordinates_map[1] < point[1]))})
 
-    print("Pareto points:", len(pareto_frontier))
+    print("Pareto:", len(pareto_frontier))
     for pareto_point in pareto_frontier:
         print(f"\n\nSolution for F1={pareto_point[0]}, F2={pareto_point[1]}")
         print(map_point_to_solution[pareto_point])
